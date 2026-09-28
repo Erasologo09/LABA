@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<title>ЛАБА — Закон Архимеда</title>
+<meta name="description" content="Понятный разбор закона Архимеда с интерактивным опытом, точными формулами и помощником по физике."/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@500;800&family=Literata:wght@400;600&display=swap"/>
+<style>
+:root{--bg:#eef4f5;--card:#fff;--ink:#10303d;--mute:#4d6b77;--line:#c9dbe0;--water:#2c7da0;--fa:#c47a00;--mg:#b2384e;--body:#10303d;--tank:#dcebef;
+--h:'Onest',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;--s:'Literata',Georgia,'Times New Roman',serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1c25;--card:#12303d;--ink:#e3eef1;--mute:#9db8c2;--line:#26485a;--water:#3a9bc4;--fa:#f0a93b;--mg:#ee7a90;--body:#cfe3ea;--tank:#0f2a36}}
+:root[data-theme="dark"]{--bg:#0b1c25;--card:#12303d;--ink:#e3eef1;--mute:#9db8c2;--line:#26485a;--water:#3a9bc4;--fa:#f0a93b;--mg:#ee7a90;--body:#cfe3ea;--tank:#0f2a36}
+html{scroll-behavior:smooth;scroll-padding-top:calc(72px + env(safe-area-inset-top,0px))}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 19px/1.7 var(--s);-webkit-font-smoothing:antialiased}
+a{color:inherit}button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--fa);outline-offset:3px;border-radius:6px}
+h1,h2,.brand,nav,.chapter,.formula,label,.readout,button,.state{font-family:var(--h)}
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:28px;padding:14px clamp(20px,5vw,64px);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);font-size:15px}
+.brand{font-weight:800;text-decoration:none;font-size:20px;letter-spacing:.04em}.brand span{display:inline-block;color:var(--water);transition:transform .6s}
+.site-header nav{display:flex;gap:22px;margin-left:auto}.site-header nav a{text-decoration:none;color:var(--mute);padding:4px 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
+.site-header nav a:hover,.site-header nav a.on{color:var(--ink);border-color:var(--water)}
+.header-link{background:var(--ink);color:var(--bg);text-decoration:none;padding:9px 16px;border-radius:99px;font:500 14px var(--h);transition:opacity .2s}.header-link:hover{opacity:.85}
+.hero{position:relative;overflow:hidden;min-height:calc(100svh - 64px);padding:clamp(40px,8vw,96px) clamp(20px,5vw,64px) 0;display:flex;flex-direction:column}
+.chapter{margin:0 0 20px;color:var(--mute);font-size:15px;font-weight:500}
+h1{margin:0;font:800 clamp(3.4rem,13vw,10.5rem)/.92 var(--h);letter-spacing:-.04em}
+h1 span{display:block;overflow:hidden;padding-bottom:.08em}h1 span i{display:block;font-style:normal;transform:translateY(110%);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}h1 span:nth-child(2) i{animation-delay:.15s}
+.hero-bottom{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,5vw,72px);max-width:1000px;margin-top:40px}
+.lead{font-size:1.35rem;line-height:1.45;font-weight:600;margin:0}.hero-bottom p{margin:0}
+.sea{position:absolute;left:0;right:0;bottom:0;height:0;background:var(--water);opacity:.9;animation:fill 1.6s .8s cubic-bezier(.3,.7,.2,1) forwards}
+.sea .wave{position:absolute;left:0;right:0;top:-23px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='24' viewBox='0 0 120 24'%3E%3Cpath d='M0 12Q30 0 60 12T120 12V24H0Z' fill='%232c7da0'/%3E%3C/svg%3E") repeat-x;animation:drift 5s linear infinite}
+.ball{position:absolute;right:16%;top:-78px;width:64px;height:64px;border-radius:50%;background:var(--ink);opacity:0;animation:drop 1s 1.4s cubic-bezier(.5,0,.9,.5) forwards,bob 3.6s 2.5s ease-in-out infinite}
+@keyframes rise{to{transform:none}}@keyframes fill{to{height:min(30vh,260px)}}@keyframes drift{to{background-position-x:-120px}}
+@keyframes drop{0%{opacity:1;transform:translateY(-320px)}100%{opacity:1;transform:translateY(24px)}}
+@keyframes bob{0%,100%{opacity:1;transform:translateY(24px) rotate(0)}50%{opacity:1;transform:translateY(10px) rotate(8deg)}}
+.reading{display:grid;grid-template-columns:200px minmax(0,62ch);gap:clamp(20px,5vw,64px);padding:clamp(56px,9vw,112px) clamp(20px,5vw,64px);border-top:1px solid var(--line)}
+.reading aside{font:500 15px var(--h);color:var(--mute);border-left:3px solid var(--water);padding-left:14px;align-self:start;position:sticky;top:96px}.reading aside p{margin:0}.reading aside span{display:none}
+h2{font:800 clamp(1.9rem,4.4vw,3.1rem)/1.08 var(--h);letter-spacing:-.025em;margin:0 0 .6em}
+.prose p{margin:0 0 1.1em}
+blockquote{margin:1.6em 0;padding:8px 0 8px 22px;border-left:4px solid var(--fa);font:600 1.3rem/1.45 var(--h)}
+.formula-section{padding:clamp(48px,8vw,96px) clamp(20px,5vw,64px);background:var(--ink);color:var(--bg)}
+.formula-label{font:500 15px var(--h);opacity:.7;margin-bottom:16px}
+.formula{font-weight:500;font-size:clamp(2rem,7vw,5.2rem);line-height:1.1;letter-spacing:-.02em}
+[data-k]{transition:background .2s,color .2s;border-radius:8px;padding:0 .12em}[data-k].hl{background:var(--fa);color:#10303d}
+.formula-notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:36px}
+.formula-notes p{margin:0;padding:12px 14px;border:1px solid rgba(255,255,255,.25);font-size:.9rem;line-height:1.4}.formula-notes b{display:block;font:800 1.3rem var(--h)}.formula-notes span{opacity:.8}
+.lab{padding:clamp(56px,9vw,112px) clamp(20px,5vw,64px);border-top:1px solid var(--line)}
+.lab-heading{max-width:62ch;margin-bottom:36px}.lab-heading p:last-child{margin:0}
+.experiment{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:28px;align-items:start}
+.diagram{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:22px}.controls,.dialogue{border-top:3px solid var(--ink);padding:18px 0 0}
+.diagram-caption{margin:0 0 10px;font:500 14px var(--h);color:var(--mute)}
+svg.tank{display:block;width:100%;height:auto;touch-action:none;user-select:none}
+#obj{cursor:grab}#obj.pl{transition:transform .45s cubic-bezier(.3,.8,.3,1)}#obj:active{cursor:grabbing}
+.state{margin:12px 0 0;font-weight:800;font-size:1.5rem;transition:color .3s}.state.up{color:var(--fa)}.state.down{color:var(--mg)}.state.eq{color:var(--water)}
+.control-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.btns{display:flex;gap:8px}.btns button,.prompts button,.dialogue form button{border:1.5px solid var(--ink);background:transparent;border-radius:99px;padding:7px 14px;font-size:14px;font-weight:500;transition:background .2s,color .2s,transform .15s}
+.btns button:hover,.prompts button:hover,.out:hover{background:var(--ink);color:var(--bg)}.btns button:active{transform:scale(.95)}.btns .go{background:var(--water);border-color:var(--water);color:#fff}
+label{display:block;margin:16px 0 0;font-size:15px}label span{display:flex;justify-content:space-between}label small{color:var(--mute)}
+input[type=range]{width:100%;accent-color:var(--water);height:28px;margin:4px 0 0}
+.readout{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}.readout p{margin:0;padding:10px;border-radius:4px;background:var(--bg);font-size:13px;line-height:1.3}
+.readout b{display:block;font-size:1.25rem;margin-top:4px;font-variant-numeric:tabular-nums}
+.live-note{margin:16px 0 0;font-size:.95rem;color:var(--mute)}
+.outcomes{display:grid;gap:12px;margin:1.6em 0}.out{text-align:left;display:block;width:100%;padding:16px 18px;border:0;border-left:4px solid var(--water);background:var(--card);border-radius:4px;transition:background .2s,color .2s}
+.out b{display:block;font-size:1.25rem}.out span{display:block;font:400 1rem/1.4 var(--s);margin-top:4px}.out em{display:block;font:500 13px var(--h);font-style:normal;margin-top:8px;color:var(--water)}.out:hover em{color:inherit}
+.fact-band{padding:clamp(48px,8vw,96px) clamp(20px,5vw,64px);background:var(--water);color:#fff}.fact-band .chapter{color:#fff;opacity:.85}.fact-band h2,.fact-band p{max-width:36ch}.fact-band p:last-child{max-width:62ch;margin:0;font-size:1.1rem}
+.assistant{display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(20px,5vw,64px);padding:clamp(56px,9vw,112px) clamp(20px,5vw,64px);border-top:1px solid var(--line)}
+.answer{min-height:150px}.answer span{font:800 13px var(--h);color:var(--water)}.answer p{margin:6px 0 0}.answer p.typing::after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--ink);margin-left:2px;vertical-align:-2px;animation:blink .8s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.prompts{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.dialogue form{display:flex;gap:8px}.dialogue form input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)}
+footer{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;padding:32px clamp(20px,5vw,64px);border-top:1px solid var(--line);font-family:var(--h);font-size:15px}footer p{margin:0;color:var(--mute);flex:1}
+@media(max-width:860px){.site-header nav{display:none}.header-link{margin-left:auto}.hero-bottom,.experiment,.assistant,.reading{grid-template-columns:1fr}.reading aside{position:static}.ball{right:8%}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important;scroll-behavior:auto}}
+</style></head>
+<body><main id="top">
+<header class="site-header"><a class="brand" href="#top"><span>∞</span> ЛАБА</a><nav aria-label="Навигация по материалу"><a href="#principle">Принцип</a><a href="#simulator">Опыт</a><a href="#conclusions">Выводы</a></nav><a class="header-link" href="#simulator">Открыть лабораторию ↓</a></header>
+<article>
+<section class="hero"><p class="chapter">Физика · глава 01</p><h1><span><i>Закон</i></span><span><i>Архимеда</i></span></h1>
+<div class="hero-bottom"><p class="lead">Почему камень идёт ко дну, льдина держится на воде, а огромный стальной корабль остаётся на поверхности?</p><p>Ответ начинается с простой мысли: жидкость давит на погружённое тело со всех сторон, но снизу — сильнее, чем сверху. Из этой разницы рождается сила, направленная вверх.</p></div>
+<div class="sea" aria-hidden="true"><div class="wave"></div><div class="ball"></div></div></section>
+
+<section class="reading" id="principle"><aside><p>Наблюдение</p></aside><div class="prose"><h2>Вода будто делает тело легче</h2><p>Попробуйте поднять тяжёлый предмет под водой. Рука сразу почувствует: удерживать его проще. Масса предмета не изменилась, сила тяжести тоже никуда не исчезла. Просто к ней добавилась другая сила — выталкивающая.</p><p>Она возникает в жидкостях и газах. Давление среды растёт с глубиной, поэтому нижняя поверхность тела получает более сильный толчок, чем верхняя. Боковые силы взаимно компенсируются, а их вертикальная разность даёт результирующую силу вверх.</p><blockquote>На погружённое тело действует выталкивающая сила, равная весу вытесненной им жидкости.</blockquote><p>Это и есть закон Архимеда. Слово «вытесненной» здесь главное: учитывается не весь объём тела, а только та его часть, которая находится в жидкости.</p></div></section>
+
+<section class="formula-section"><div class="formula-label">Закон в одной строке. Наведите на символ, чтобы увидеть, что он значит.</div>
+<div class="formula"><span data-k="f" tabindex="0">F<sub>А</sub></span> = <span data-k="r" tabindex="0">ρ<sub>ж</sub></span> · <span data-k="g" tabindex="0">g</span> · <span data-k="v" tabindex="0">V<sub>погр</sub></span></div>
+<div class="formula-notes"><p data-k="r"><b>ρ<sub>ж</sub></b><span>плотность жидкости, кг/м³</span></p><p data-k="g"><b>g</b><span>ускорение свободного падения, 9,81 м/с²</span></p><p data-k="v"><b>V<sub>погр</sub></b><span>объём погружённой части тела, м³</span></p></div></section>
+
+<section class="reading compact"><aside><p>Смысл формулы</p></aside><div class="prose"><h2>Больше вытеснил — сильнее вытолкнуло</h2><p>Плотная жидкость создаёт большую силу при том же объёме. Поэтому в солёной воде держаться на поверхности легче, чем в пресной, а в менее плотном масле то же тело погружается глубже.</p><p>У плавающего тела сила Архимеда автоматически становится равной его весу. Если тело немного опустить, оно вытеснит больше жидкости и получит дополнительный толчок вверх. Если приподнять — вытеснит меньше, и сила тяжести вернёт его ниже.</p></div></section>
+
+<section class="lab" id="simulator"><div class="lab-heading"><p class="chapter">Интерактивный опыт</p><h2>Проверьте закон сами</h2><p>Меняйте среду и параметры тела. Схема и вычисления обновляются сразу. Потяните тело мышью или пальцем, либо нажмите «Отпустить».</p></div>
+<div class="experiment"><div class="diagram"><p class="diagram-caption">Учебная схема сил: жёлтая стрелка — сила Архимеда, красная — вес</p>
+<svg class="tank" id="tank" viewBox="0 0 400 360" role="img" aria-label="Тело в жидкости"><defs><clipPath id="cp"><rect x="30" y="10" width="340" height="330" rx="10"/></clipPath></defs>
+<rect x="30" y="10" width="340" height="330" rx="10" fill="var(--tank)" stroke="var(--line)" stroke-width="3"/>
+<g clip-path="url(#cp)"><g id="obj" class="pl"><rect id="body" x="150" y="0" width="100" height="95" rx="10" fill="var(--body)"/><text x="200" id="vt" text-anchor="middle" fill="var(--bg)" font-family="Onest,sans-serif" font-weight="800" font-size="26">V</text>
+<g id="afa"><line x1="120" x2="120" stroke="var(--fa)" stroke-width="6" stroke-linecap="round"/><polygon fill="var(--fa)"/><text fill="var(--fa)" font-family="Onest,sans-serif" font-weight="800" font-size="16" x="60">F<tspan font-size="11" dy="4">А</tspan></text></g>
+<g id="amg"><line x1="280" x2="280" stroke="var(--mg)" stroke-width="6" stroke-linecap="round"/><polygon fill="var(--mg)"/><text fill="var(--mg)" font-family="Onest,sans-serif" font-weight="800" font-size="16" x="296">mg</text></g></g>
+<g id="water"><g id="wv"><path id="wp" opacity=".85"/></g><rect id="wr" x="30" y="130" width="340" height="210" opacity=".55"/></g></g></svg>
+<p class="state" id="state" aria-live="polite"></p></div>
+<div class="controls"><div class="control-head"><b>Параметры опыта</b><div class="btns"><button id="rel" class="go">Отпустить</button><button id="rst">Сбросить</button></div></div>
+<label><span>Жидкость <b id="ln">вода</b></span><input id="li" type="range" min="0" max="3" step="1" value="0"/><small id="ld">1000 кг/м³</small></label>
+<label><span>Масса тела <b id="mn">1.2 кг</b></span><input id="mi" type="range" min="0.2" max="3" step="0.1" value="1.2"/></label>
+<label><span>Полный объём <b id="vn">1.5 л</b></span><input id="vi" type="range" min="0.3" max="3" step="0.1" value="1.5"/></label>
+<label><span>Погружённая часть <b id="fn">75%</b></span><input id="fi" type="range" min="10" max="100" step="1" value="75"/></label>
+<div class="readout"><p><span>Сила Архимеда</span><b id="ra">0 Н</b></p><p><span>Вес тела</span><b id="rw">0 Н</b></p><p><span>Плотность тела</span><b id="rd">0 кг/м³</b></p></div>
+<p class="live-note" id="note"></p></div></div></section>
+
+<section class="reading" id="conclusions"><aside><p>Три исхода</p></aside><div class="prose"><h2>Всплыть, зависнуть или утонуть</h2><p>Поведение тела определяется сравнением двух сил. Если сила Архимеда больше веса, результирующая направлена вверх. Если меньше — вниз. Если силы равны, ускорения нет: тело плавает на поверхности или остаётся на выбранной глубине.</p>
+<div class="outcomes"><button class="out" data-m="0.8"><b>ρ<sub>т</sub> &lt; ρ<sub>ж</sub></b><span>тело всплывает и плавает, погрузившись частично</span><em>Показать в опыте</em></button><button class="out" data-m="1.5"><b>ρ<sub>т</sub> = ρ<sub>ж</sub></b><span>полностью погружённое тело может быть в равновесии</span><em>Показать в опыте</em></button><button class="out" data-m="2.6"><b>ρ<sub>т</sub> &gt; ρ<sub>ж</sub></b><span>тело тонет, если ему не мешают другие силы</span><em>Показать в опыте</em></button></div>
+<p>Именно поэтому материал сам по себе не всегда решает судьбу предмета. Стальной шар тонет, но стальной корабль полый: вместе с воздухом его средняя плотность оказывается меньше плотности воды.</p></div></section>
+
+<section class="fact-band"><p class="chapter">Тонкость, которую часто упускают</p><h2>На глубине сила не обязана становиться больше</h2><p>Если жидкость однородна, а полностью погружённое тело не сжимается, его вытесненный объём и плотность жидкости постоянны. Значит, сила Архимеда тоже постоянна. Давление на всё тело растёт, но разность давления сверху и снизу остаётся прежней.</p></section>
+
+<section class="reading history"><aside><p>История</p></aside><div class="prose"><h2>Что скрывается за словом «Эврика»</h2><p>Легенда рассказывает, что Архимед заметил вытеснение воды, принимая ванну, и выбежал на улицу с криком «Эврика!» — «Нашёл!». История красивая, хотя её детали появились в позднем пересказе.</p><p>Гораздо важнее сам метод: измеряя объём вытесненной воды и сравнивая вес, можно рассуждать о плотности предмета, не разрушая его. Так бытовое наблюдение становится точным физическим инструментом.</p></div></section>
+
+<section class="assistant" id="assistant"><div><p class="chapter">Помощник по опыту</p><h2>Спросите о том, что видите</h2><p>Ответ учитывает текущие значения в лаборатории и связывает числа с физическим смыслом.</p></div>
+<div class="dialogue"><div class="answer" aria-live="polite"><span>ЛАБА</span><p id="ans">Я читаю параметры опыта и объясняю, почему тело всплывает, тонет или остаётся в равновесии.</p></div>
+<div class="prompts"><button>Почему корабль не тонет?</button><button>Зависит ли сила от глубины?</button><button>Что будет в масле?</button></div>
+<form id="qf"><input id="qi" aria-label="Вопрос помощнику" placeholder="Например: объясни формулу…"/><button aria-label="Отправить вопрос">Спросить</button></form></div></section>
+</article>
+<footer><a class="brand" href="#top"><span>∞</span> ЛАБА</a><p>Физика, которую можно проверить.</p><a href="#top">Наверх ↑</a></footer></main>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)},RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var LQ=[['вода',1000,'#2c7da0'],['морская вода',1030,'#1f6d93'],['масло',920,'#d1a93a'],['глицерин',1260,'#6fae9a']];
+var YW=130,FL=340,s={li:0,m:1.2,V:1.5,y:0},raf=0,v=0,drag=0;
+var h=function(){return 50+s.V*30};
+var fr=function(){return Math.max(0,Math.min(1,(s.y+h()-YW)/h()))};
+var yOf=function(f){return YW-h()+f*h()};
+var rho=function(){return LQ[s.li][1]},rt=function(){return s.m/(s.V/1000)};
+function wave(){var d='M0 0',i;for(i=0;i<=6;i++)d+='Q'+(i*120+30)+' -14 '+(i*120+60)+' 0T'+(i*120+120)+' 0';$('wp').setAttribute('d',d+'V30H0Z');$('wp').setAttribute('transform','translate(0,'+YW+')');
+var a=$('wv');a.style.animation=RM?'none':'sl 4s linear infinite'}
+var st=document.createElement('style');st.textContent='@keyframes sl{to{transform:translateX(-240px)}}';document.head.appendChild(st);
+function arrow(g,x,y1,y2){var l=g.querySelector('line'),p=g.querySelector('polygon'),dir=y2>y1?1:-1;l.setAttribute('y1',y1);l.setAttribute('y2',y2-dir*8);
+p.setAttribute('points',(x-11)+','+(y2-dir*12)+' '+(x+11)+','+(y2-dir*12)+' '+x+','+y2);g.querySelector('text').setAttribute('y',y2+(dir>0?4:0))}
+function info(){var f=fr(),FA=rho()*9.81*s.V/1000*f,W=s.m*9.81,d=rt(),r=rho();
+var t=Math.abs(FA-W)<.03*W?['плавает: силы равны','eq']:FA>W?['всплывает','up']:['тонет','down'];
+return{f:f,FA:FA,W:W,d:d,r:r,t:t}}
+function render(){var i=info(),hh=h(),c=hh/2;
+$('obj').setAttribute('transform','translate(0,'+s.y+')');$('body').setAttribute('height',hh);$('vt').setAttribute('y',c+9);
+arrow($('afa'),120,c,c-Math.min(90,4+i.FA*4));arrow($('amg'),280,c,c+Math.min(90,4+i.W*4));
+$('wp').setAttribute('fill',LQ[s.li][2]);$('wr').setAttribute('fill',LQ[s.li][2]);
+$('state').textContent='Тело '+i.t[0];$('state').className='state '+i.t[1];
+$('ra').textContent=i.FA.toFixed(1)+' Н';$('rw').textContent=i.W.toFixed(1)+' Н';$('rd').textContent=Math.round(i.d)+' кг/м³';
+$('ln').textContent=LQ[s.li][0];$('ld').textContent=i.r+' кг/м³';$('mn').textContent=s.m.toFixed(1)+' кг';$('vn').textContent=s.V.toFixed(1)+' л';
+$('fn').textContent=Math.round(i.f*100)+'%';$('fi').value=Math.round(i.f*100);
+var q=i.d/i.r,n=$('note');
+n.textContent=Math.abs(q-1)<.01?'Плотности равны: тело безразлично к глубине и остаётся там, где его оставили.':q<1?'Для свободного плавания достаточно погрузить примерно '+Math.round(q*100)+'% объёма.':'Тело плотнее жидкости: даже при полном погружении оно тонет.';
+$('body').setAttribute('fill',i.t[1]==='eq'?'var(--water)':'var(--body)')}
+function place(f,anim){cancelAnimationFrame(raf);v=0;var o=$('obj');o.classList.toggle('pl',!!anim&&!RM);s.y=yOf(f);render()}
+function release(){cancelAnimationFrame(raf);var o=$('obj');o.classList.remove('pl');
+if(RM){var q=Math.min(1,rt()/rho());s.y=q<1?yOf(q):Math.min(FL-h(),s.y);render();return}
+var last=0;function step(t){var dt=last?Math.min(.033,(t-last)/1000):.016;last=t;var i=info(),a=-600*(i.r*i.f/i.d-1)-(1.6*i.f+.05)*v;
+v+=a*dt;s.y+=v*dt;if(s.y>FL-h()){s.y=FL-h();v=0}if(s.y<YW-h()){s.y=YW-h();v=0}render();
+if(Math.abs(v)<.6&&Math.abs(a)<3||(s.y>=FL-h()&&a>0)){return}raf=requestAnimationFrame(step)}raf=requestAnimationFrame(step)}
+function on(id,fn){$(id).addEventListener('input',fn)}
+on('li',function(e){s.li=+e.target.value;place(fr(),1)});on('mi',function(e){s.m=+e.target.value;place(fr(),1)});
+on('vi',function(e){var f=fr();s.V=+e.target.value;place(f,1)});on('fi',function(e){place(e.target.value/100,1)});
+$('rel').onclick=release;$('rst').onclick=function(){s.li=0;s.m=1.2;s.V=1.5;$('li').value=0;$('mi').value=1.2;$('vi').value=1.5;place(.75,1)};
+var svg=$('tank');function ptY(e){var p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;return p.matrixTransform(svg.getScreenCTM().inverse()).y}
+$('obj').addEventListener('pointerdown',function(e){drag=1;cancelAnimationFrame(raf);v=0;$('obj').classList.remove('pl');this.setPointerCapture(e.pointerId);this._o=ptY(e)-s.y});
+$('obj').addEventListener('pointermove',function(e){if(!drag)return;s.y=Math.max(YW-h(),Math.min(FL-h(),ptY(e)-this._o));render()});
+$('obj').addEventListener('pointerup',function(){if(drag){drag=0;release()}});
+document.querySelectorAll('.out').forEach(function(b){b.onclick=function(){s.li=0;s.V=1.5;s.m=+b.dataset.m;$('li').value=0;$('mi').value=s.m;$('vi').value=1.5;place(.35,0);document.getElementById('simulator').scrollIntoView({behavior:RM?'auto':'smooth'});setTimeout(release,RM?0:700)}});
+document.querySelectorAll('[data-k]').forEach(function(el){var k=el.dataset.k,f=function(x){return function(){document.querySelectorAll('[data-k="'+k+'"]').forEach(function(o){o.classList.toggle('hl',x)})}};
+el.addEventListener('mouseenter',f(1));el.addEventListener('mouseleave',f(0));el.addEventListener('focus',f(1));el.addEventListener('blur',f(0))});
+var secs=[].slice.call(document.querySelectorAll('#principle,#simulator,#conclusions')),links=document.querySelectorAll('.site-header nav a');
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})})},{rootMargin:'-40% 0px -55% 0px'});secs.forEach(function(x){io.observe(x)});
+/* помощник */
+var tm=0;function say(t){var p=$('ans');clearInterval(tm);if(RM){p.textContent=t;return}p.textContent='';p.className='typing';var i=0;tm=setInterval(function(){p.textContent=t.slice(0,++i);if(i>=t.length){clearInterval(tm);p.className=''}},14)}
+function reply(q){q=q.toLowerCase();var i=info(),F=function(x){return x.toFixed(1).replace('.',',')};
+if(/корабл|судн|лодк/.test(q))return'Стальной корабль полый: вместе с воздухом внутри его средняя плотность меньше плотности воды. Он погружается ровно настолько, чтобы вытесненная вода весила столько же, сколько весь корабль.';
+if(/глубин|ниже|глубж/.test(q))return'Нет. У полностью погружённого тела в однородной жидкости вытесненный объём и плотность жидкости не меняются, поэтому сила Архимеда остаётся той же. Давление растёт, но разность давлений сверху и снизу прежняя.';
+if(/масл/.test(q)){var qq=rt()/920;return'В масле (920 кг/м³) плотность тела '+Math.round(rt())+' кг/м³. '+(qq<1?'Тело будет плавать, погрузившись примерно на '+Math.round(qq*100)+'%.':'Оно плотнее масла и утонет.')+' Выберите «масло» в опыте и нажмите «Отпустить».'}
+if(/формул|f_?а|ρ/.test(q))return'Сила Архимеда равна произведению плотности жидкости, ускорения свободного падения и объёма погружённой части. Сейчас: '+i.r+' · 9,81 · '+(s.V/1000*i.f).toFixed(5).replace('.',',')+' ≈ '+F(i.FA)+' Н.';
+return'Сейчас сила Архимеда '+F(i.FA)+' Н, вес тела '+F(i.W)+' Н, поэтому тело '+i.t[0]+'. Плотность тела '+Math.round(i.d)+' кг/м³, жидкости — '+i.r+' кг/м³.'}
+document.querySelectorAll('.prompts button').forEach(function(b){b.onclick=function(){say(reply(b.textContent))}});
+$('qf').onsubmit=function(e){e.preventDefault();var t=$('qi').value.trim();say(reply(t||'сейчас'));$('qi').value=''};
+wave();place(.75,0);
+})();
+</script></body></html>
